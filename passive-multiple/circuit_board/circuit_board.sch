@@ -1,0 +1,286 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:AudioJack2_SwitchT J1
+U 1 1 5FBB4B17
+P 3575 1825
+F 0 "J1" H 3396 1758 50  0000 R CNN
+F 1 "in 1" H 3396 1849 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 3575 1825 50  0001 C CNN
+F 3 "~" H 3575 1825 50  0001 C CNN
+	1    3575 1825
+	1    0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 5FBB5EDB
+P 3900 2050
+F 0 "#PWR01" H 3900 1800 50  0001 C CNN
+F 1 "GND" H 3905 1877 50  0000 C CNN
+F 2 "" H 3900 2050 50  0001 C CNN
+F 3 "" H 3900 2050 50  0001 C CNN
+	1    3900 2050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3900 2050 3900 1925
+Wire Wire Line
+	3900 1925 3775 1925
+NoConn ~ 3775 1725
+$Comp
+L Connector:AudioJack2_SwitchT J3
+U 1 1 5FBB64F2
+P 5175 1825
+F 0 "J3" H 4995 1758 50  0000 R CNN
+F 1 "out 1" H 4995 1849 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5175 1825 50  0001 C CNN
+F 3 "~" H 5175 1825 50  0001 C CNN
+	1    5175 1825
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR03
+U 1 1 5FBB64FC
+P 4850 2050
+F 0 "#PWR03" H 4850 1800 50  0001 C CNN
+F 1 "GND" H 4855 1877 50  0000 C CNN
+F 2 "" H 4850 2050 50  0001 C CNN
+F 3 "" H 4850 2050 50  0001 C CNN
+	1    4850 2050
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 2050 4850 1925
+Wire Wire Line
+	4850 1925 4975 1925
+NoConn ~ 4975 1725
+$Comp
+L Connector:AudioJack2_SwitchT J4
+U 1 1 5FBB968F
+P 5175 2500
+F 0 "J4" H 4995 2433 50  0000 R CNN
+F 1 "out 2" H 4995 2524 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5175 2500 50  0001 C CNN
+F 3 "~" H 5175 2500 50  0001 C CNN
+	1    5175 2500
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 5FBB9699
+P 4850 2725
+F 0 "#PWR04" H 4850 2475 50  0001 C CNN
+F 1 "GND" H 4855 2552 50  0000 C CNN
+F 2 "" H 4850 2725 50  0001 C CNN
+F 3 "" H 4850 2725 50  0001 C CNN
+	1    4850 2725
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 2725 4850 2600
+Wire Wire Line
+	4850 2600 4975 2600
+$Comp
+L Connector:AudioJack2_SwitchT J5
+U 1 1 5FBBB084
+P 5175 3200
+F 0 "J5" H 4995 3133 50  0000 R CNN
+F 1 "out 3" H 4995 3224 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5175 3200 50  0001 C CNN
+F 3 "~" H 5175 3200 50  0001 C CNN
+	1    5175 3200
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR05
+U 1 1 5FBBB08E
+P 4850 3425
+F 0 "#PWR05" H 4850 3175 50  0001 C CNN
+F 1 "GND" H 4855 3252 50  0000 C CNN
+F 2 "" H 4850 3425 50  0001 C CNN
+F 3 "" H 4850 3425 50  0001 C CNN
+	1    4850 3425
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 3425 4850 3300
+Wire Wire Line
+	4850 3300 4975 3300
+$Comp
+L Connector:AudioJack2_SwitchT J2
+U 1 1 5FBBC27C
+P 3600 4000
+F 0 "J2" H 3421 3933 50  0000 R CNN
+F 1 "in 2" H 3421 4024 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 3600 4000 50  0001 C CNN
+F 3 "~" H 3600 4000 50  0001 C CNN
+	1    3600 4000
+	1    0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 5FBBC286
+P 3925 4225
+F 0 "#PWR02" H 3925 3975 50  0001 C CNN
+F 1 "GND" H 3930 4052 50  0000 C CNN
+F 2 "" H 3925 4225 50  0001 C CNN
+F 3 "" H 3925 4225 50  0001 C CNN
+	1    3925 4225
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3925 4225 3925 4100
+Wire Wire Line
+	3925 4100 3800 4100
+$Comp
+L Connector:AudioJack2_SwitchT J6
+U 1 1 5FBBC293
+P 5200 4000
+F 0 "J6" H 5020 3933 50  0000 R CNN
+F 1 "out 4" H 5020 4024 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5200 4000 50  0001 C CNN
+F 3 "~" H 5200 4000 50  0001 C CNN
+	1    5200 4000
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR06
+U 1 1 5FBBC29D
+P 4875 4225
+F 0 "#PWR06" H 4875 3975 50  0001 C CNN
+F 1 "GND" H 4880 4052 50  0000 C CNN
+F 2 "" H 4875 4225 50  0001 C CNN
+F 3 "" H 4875 4225 50  0001 C CNN
+	1    4875 4225
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4875 4225 4875 4100
+Wire Wire Line
+	4875 4100 5000 4100
+$Comp
+L Connector:AudioJack2_SwitchT J7
+U 1 1 5FBBC2AA
+P 5200 4675
+F 0 "J7" H 5020 4608 50  0000 R CNN
+F 1 "out 5" H 5020 4699 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5200 4675 50  0001 C CNN
+F 3 "~" H 5200 4675 50  0001 C CNN
+	1    5200 4675
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR07
+U 1 1 5FBBC2B4
+P 4875 4900
+F 0 "#PWR07" H 4875 4650 50  0001 C CNN
+F 1 "GND" H 4880 4727 50  0000 C CNN
+F 2 "" H 4875 4900 50  0001 C CNN
+F 3 "" H 4875 4900 50  0001 C CNN
+	1    4875 4900
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4875 4900 4875 4775
+Wire Wire Line
+	4875 4775 5000 4775
+NoConn ~ 5000 4575
+$Comp
+L Connector:AudioJack2_SwitchT J8
+U 1 1 5FBBC2C1
+P 5200 5375
+F 0 "J8" H 5020 5308 50  0000 R CNN
+F 1 "out 6" H 5020 5399 50  0000 R CNN
+F 2 "Connectors_Audio:Jack_3.5mm_QingPu_WQP-PJ398SM_Vertical_CircularHoles" H 5200 5375 50  0001 C CNN
+F 3 "~" H 5200 5375 50  0001 C CNN
+	1    5200 5375
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR08
+U 1 1 5FBBC2CB
+P 4875 5600
+F 0 "#PWR08" H 4875 5350 50  0001 C CNN
+F 1 "GND" H 4880 5427 50  0000 C CNN
+F 2 "" H 4875 5600 50  0001 C CNN
+F 3 "" H 4875 5600 50  0001 C CNN
+	1    4875 5600
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	4875 5600 4875 5475
+Wire Wire Line
+	4875 5475 5000 5475
+NoConn ~ 5000 5275
+Wire Wire Line
+	4975 1825 4575 1825
+Wire Wire Line
+	4975 2500 4575 2500
+Wire Wire Line
+	4575 2500 4575 1825
+Connection ~ 4575 1825
+Wire Wire Line
+	4575 1825 3775 1825
+Connection ~ 4575 2500
+Wire Wire Line
+	4575 3900 4575 3200
+Wire Wire Line
+	5000 4000 4575 4000
+Wire Wire Line
+	4575 4000 4575 4675
+Wire Wire Line
+	4575 4675 5000 4675
+Connection ~ 4575 4000
+Wire Wire Line
+	4575 4000 3800 4000
+Wire Wire Line
+	5000 5375 4575 5375
+Wire Wire Line
+	4575 5375 4575 4675
+Connection ~ 4575 4675
+$Comp
+L power:PWR_FLAG #FLG01
+U 1 1 5FBCD242
+P 9650 5750
+F 0 "#FLG01" H 9650 5825 50  0001 C CNN
+F 1 "PWR_FLAG" H 9650 5923 50  0000 C CNN
+F 2 "" H 9650 5750 50  0001 C CNN
+F 3 "~" H 9650 5750 50  0001 C CNN
+	1    9650 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR09
+U 1 1 5FBCDCCB
+P 9650 5750
+F 0 "#PWR09" H 9650 5500 50  0001 C CNN
+F 1 "GND" H 9655 5577 50  0000 C CNN
+F 2 "" H 9650 5750 50  0001 C CNN
+F 3 "" H 9650 5750 50  0001 C CNN
+	1    9650 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4975 3200 4575 3200
+Connection ~ 4575 3200
+Wire Wire Line
+	4575 2500 4575 3200
+NoConn ~ 4975 3100
+NoConn ~ 4975 2400
+Wire Wire Line
+	4575 3900 3800 3900
+NoConn ~ 5000 3900
+$EndSCHEMATC
