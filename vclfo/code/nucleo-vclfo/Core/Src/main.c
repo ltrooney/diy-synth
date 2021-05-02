@@ -33,6 +33,13 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+static const uint16_t SMPL_SIZE = 256;
+static const uint8_t NUM_OCTAVES = 10;
+static const uint32_t FS = 44100;
+static const uint8_t NUM_WAVES = 4;
+static const float wavetable[10240] = {
+#include "../../../wavetable_init.txt"
+};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,9 +51,7 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-const uint16_t SMPL_SIZE = 512;
-const uint8_t NUM_OCTAVES = 9;
-const uint16_t MAX_H = 368;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -54,8 +59,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-float** wavetable_init(void);
-void wavetable_free(float **, uint8_t);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -93,8 +97,6 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  wavetable_init();
 
   /* USER CODE END 2 */
 
@@ -225,44 +227,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-float** wavetable_init(void) {
-	// determine the number of harmonics for each octave
-	int num_harmonics_per_octave[NUM_OCTAVES];
-	for (int i = 0; i < NUM_OCTAVES; i++) {
-		num_harmonics_per_octave[i] = ((float) MAX_H) / (1 << i);
-	}
-
-	// populate x values
-	float x[SMPL_SIZE];
-	for (int i = 0; i < SMPL_SIZE; i++) {
-		x[i] = 2 * M_PI * ((float) i) / SMPL_SIZE;
-	}
-
-	float *sine_samples = (float *) malloc(SMPL_SIZE * sizeof(float));
-
-	for (int oct_idx = 0; oct_idx < NUM_OCTAVES; oct_idx++) {
-
-		// generate a sine wave
-		for (int i = 0; i < SMPL_SIZE; i++) {
-			sine_samples[i] = sin(x[i]);
-		}
-
-	}
-
-	// for now, there's only 1 wave
-	int num_waves = 1;
-	float **wavetable = (float **) malloc(num_waves * sizeof(float *));
-	wavetable[0] = sine_samples;
-
-	return wavetable;
-}
-
-void wavetable_free(float **wavetable, uint8_t num_waves) {
-	for (int i = 0; i < num_waves; i++) {
-		free(wavetable[i]);
-	}
-	free(wavetable);
-}
 
 
 /* USER CODE END 4 */
