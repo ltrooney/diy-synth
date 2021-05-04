@@ -7,6 +7,8 @@ NUM_OCTAVES = 10
 NUM_WAVES = 4
 MAX_H = 368
 
+fname = "wavetable_init.dat"
+
 def wavetable_init():
     t = np.linspace(0, 1, SMPL_SIZE, endpoint=False)
     x = 2*np.pi*t
@@ -56,7 +58,9 @@ F_PRECISION = 6 # number of digits after the decimal place
 wt_flat = np.around(wavetable.flatten(), decimals=F_PRECISION)
 
 # write the output file
-with open("wavetable_init.txt", "w") as f:
+with open(fname, "w") as f:
+    f.write(str(NUM_OCTAVES) + "\n")
+    f.write(str(NUM_WAVES) + "\n")
     for i, sample in enumerate(wt_flat):
         thing_to_write = str(sample)
         if i < len(wt_flat)-1:
