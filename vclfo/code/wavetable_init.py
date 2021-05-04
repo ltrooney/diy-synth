@@ -1,15 +1,16 @@
 import numpy as np
 
-SMPL_SIZE = 256 # number of samples in each wave in the wavetable
-
 # constants
+SMPL_SIZE = 256 # number of samples in each wave in the wavetable
 NUM_OCTAVES = 10
 NUM_WAVES = 4
-MAX_H = 368
 
+fname_meta = "wavetable_meta.dat"
 fname = "wavetable_init.dat"
 
 def wavetable_init():
+    MAX_H = 368
+
     t = np.linspace(0, 1, SMPL_SIZE, endpoint=False)
     x = 2*np.pi*t
     num_harmonics_per_octave = [int(MAX_H/(2**i)) for i in range(0, NUM_OCTAVES)]
@@ -57,10 +58,14 @@ F_PRECISION = 6 # number of digits after the decimal place
 
 wt_flat = np.around(wavetable.flatten(), decimals=F_PRECISION)
 
+# write the wavetable meta file
+with open(fname_meta, "w") as f:
+    f.write(f'{SMPL_SIZE}\n')
+    f.write(f'{NUM_OCTAVES}\n')
+    f.write(f'{NUM_WAVES}\n')
+
 # write the output file
 with open(fname, "w") as f:
-    f.write(str(NUM_OCTAVES) + "\n")
-    f.write(str(NUM_WAVES) + "\n")
     for i, sample in enumerate(wt_flat):
         thing_to_write = str(sample)
         if i < len(wt_flat)-1:

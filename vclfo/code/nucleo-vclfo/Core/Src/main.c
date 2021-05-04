@@ -38,7 +38,7 @@ static const uint8_t NUM_OCTAVES = 10;
 static const uint32_t FS = 44100;
 static const uint8_t NUM_WAVES = 4;
 static const float wavetable[10240] = {
-#include "../../../wavetable_init.txt"
+#include "../../../wavetable_init.dat"
 };
 /* USER CODE END PD */
 
