@@ -33,10 +33,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-static const uint16_t SMPL_SIZE = 256;
-static const uint8_t NUM_OCTAVES = 10;
-static const uint32_t FS = 44100;
-static const uint8_t NUM_WAVES = 4;
+static const int SMPL_SIZE = 256;
+static const int NUM_OCTAVES = 10;
+static const int FS = 48000;
+static const int NUM_WAVES = 4;
+static const int VCO_F_MIN = 40;
+static const int VCO_F_MAX = 20000;
 static const float wavetable[10240] = {
 #include "../../../wavetable_init.dat"
 };
@@ -53,7 +55,12 @@ TIM_HandleTypeDef htim10;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-uint16_t tim10_val;
+static int tim10_val;
+static const int f = 440;
+static const float wave_shape = 0;
+static int playback_rate;
+static float y2;
+static float k;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,7 +69,14 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
-
+static inline int min(int, int);
+static inline int max(int, int);
+static inline float interp(float, float, float);
+static inline float clamp(float, float, float);
+static float translate_range(float, float, float, float, float);
+static inline float lookup(const int, const int, const int);
+static inline float lerp2pt(float, float, float, float, float);
+static float wt_sample(const int, const float, const float);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -106,14 +120,26 @@ int main(void)
   HAL_TIM_Base_Start(&htim10);
   tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
 
+  k = 0;
+  GPIO_PinState toggle_val = 1;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 24000) {
-		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 1) {
+
+
+
+//		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+
+		  playback_rate = SMPL_SIZE * f / FS;
+		  int wave_shape_floor = (int) wave_shape;
+		  y2 = wt_sample(wave_shape_floor, f, k);
+		  k = fmodf(k + playback_rate, SMPL_SIZE);
+
 		  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
 	  }
 
@@ -248,7 +274,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -256,18 +282,86 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin;
+  /*Configure GPIO pins : PA4 LD2_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
 
+static inline int min(int a, int b) { return ((a<b)?a:b); }
 
+static inline int max(int a, int b) { return ((a<b)?b:a); }
+
+static inline float interp(float x1, float x2, float amount) {
+	return (1-amount) * x1 + amount * x2;
+}
+
+static inline float clamp(float x, float lower, float upper) {
+	return x <= lower ? lower : x >= upper ? upper : x;
+}
+
+static float translate_range(float x, float from_min, float from_max, float to_min, float to_max) {
+	float from_rng = from_max - from_min;
+	float to_rng = to_max - to_min;
+
+	if (from_rng == 0) {
+		return 0;
+	}
+
+	float out = (((x - from_min) * to_rng) / from_rng) + to_min;
+	return clamp(out, to_min, to_max);
+}
+
+static inline float lookup(const int wave_idx, const int octave_idx, const int sample_idx) {
+	return wavetable[SMPL_SIZE * ((NUM_OCTAVES * wave_idx) + octave_idx) + sample_idx];
+}
+
+static inline float lerp2pt(float x0, float y0, float x1, float y1, float k) {
+	return (y0 * (x1 - k) + y1 * (k - x0)) / (x1 - x0);
+}
+
+
+static float wt_sample(const int wave_idx, const float f, const float k) {
+	GPIOA->BSRR = GPIO_PIN_4; // gpio on
+
+	const float f_clamp = clamp(f, VCO_F_MIN, VCO_F_MAX);
+
+	// quick compute log2(f_clamp / VCO_F_MIN)
+	int intlog = 0;
+	int x = (int) f_clamp / VCO_F_MIN;
+	while (x >>= 1) ++intlog;
+
+	const int oct1_idx = intlog + 1;
+	const int oct2_idx = min(oct1_idx + 1, NUM_OCTAVES - 1);
+
+	const int x0 = (int) k;
+	const int x1 = x0 + 1;
+
+	const int p_lo = VCO_F_MIN << (oct1_idx - 1);
+
+	const int interpol_amt = translate_range(f_clamp, p_lo, p_lo << 1, 0, 1);
+
+	// interpolate between octaves at point x0
+	const float px0_1 = lookup(wave_idx, oct1_idx, x0 % SMPL_SIZE);
+	const float px0_2 = lookup(wave_idx, oct2_idx, x0 % SMPL_SIZE);
+	const float y0 = interp(px0_1, px0_2, interpol_amt);
+
+	// interpolate between octaves at point x1
+	const float px1_1 = lookup(wave_idx, oct1_idx, x1 % SMPL_SIZE);
+	const float px1_2 = lookup(wave_idx, oct2_idx, x1 % SMPL_SIZE);
+	const float y1 = interp(px1_1, px1_2, interpol_amt);
+
+	const float y = lerp2pt(x0, y0, x1, y1, k);
+
+	GPIOA->BSRR = (uint32_t) GPIO_PIN_4 << 16U;	// gpio off
+
+	return y;
+}
 
 /* USER CODE END 4 */
 
