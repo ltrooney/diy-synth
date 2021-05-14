@@ -50,6 +50,9 @@ static const float wavetable[10240] = {
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi2_tx;
+
 TIM_HandleTypeDef htim10;
 
 UART_HandleTypeDef huart2;
@@ -66,8 +69,10 @@ static float k;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
 static inline int min(int, int);
 static inline int max(int, int);
@@ -112,8 +117,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM10_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
   // start timer
@@ -121,7 +128,6 @@ int main(void)
   tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
 
   k = 0;
-  GPIO_PinState toggle_val = 1;
 
   /* USER CODE END 2 */
 
@@ -137,7 +143,10 @@ int main(void)
 
 		  playback_rate = SMPL_SIZE * f / FS;
 		  int wave_shape_floor = (int) wave_shape;
+		  GPIOA->BSRR = GPIO_PIN_4; // gpio on
 		  y2 = wt_sample(wave_shape_floor, f, k);
+		  GPIOA->BSRR = (uint32_t) GPIO_PIN_4 << 16U;	// gpio off
+
 		  k = fmodf(k + playback_rate, SMPL_SIZE);
 
 		  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
@@ -192,6 +201,44 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief SPI2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI2_Init(void)
+{
+
+  /* USER CODE BEGIN SPI2_Init 0 */
+
+  /* USER CODE END SPI2_Init 0 */
+
+  /* USER CODE BEGIN SPI2_Init 1 */
+
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.NSS = SPI_NSS_HARD_OUTPUT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI2_Init 2 */
+
+  /* USER CODE END SPI2_Init 2 */
+
 }
 
 /**
@@ -255,6 +302,22 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
 
 }
 
@@ -327,7 +390,6 @@ static inline float lerp2pt(float x0, float y0, float x1, float y1, float k) {
 
 
 static float wt_sample(const int wave_idx, const float f, const float k) {
-	GPIOA->BSRR = GPIO_PIN_4; // gpio on
 
 	const float f_clamp = clamp(f, VCO_F_MIN, VCO_F_MAX);
 
@@ -357,8 +419,6 @@ static float wt_sample(const int wave_idx, const float f, const float k) {
 	const float y1 = interp(px1_1, px1_2, interpol_amt);
 
 	const float y = lerp2pt(x0, y0, x1, y1, k);
-
-	GPIOA->BSRR = (uint32_t) GPIO_PIN_4 << 16U;	// gpio off
 
 	return y;
 }
