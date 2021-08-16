@@ -5,7 +5,7 @@
  *      Author: lukerooney
  */
 
-
+/*
 static inline int min(int a, int b) { return ((a<b)?a:b); }
 
 static inline int max(int a, int b) { return ((a<b)?b:a); }
@@ -72,3 +72,4 @@ static float wt_sample(const int wave_idx, const float f, const float k) {
 
 	return y;
 }
+*/

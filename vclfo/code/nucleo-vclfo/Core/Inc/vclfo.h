@@ -18,6 +18,6 @@ static const float wavetable[10240] = {
 #include "../../../wavetable_init.dat"
 };
 
-void vclfo_loop();
+void vclfo_start();
 
 #endif /* INC_VCLFO_H_ */

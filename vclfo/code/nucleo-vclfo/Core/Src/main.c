@@ -98,11 +98,8 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  vclfo_start();
   /* USER CODE END 2 */
-
-  /* Infinite loop */
-  vclfo_loop();
 }
 
 /**
