@@ -44,6 +44,7 @@ void MX_TIM10_Init(void);
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN Prototypes */
+void tim1_DMA_DBM_start(uint32_t, uint32_t, uint32_t, uint32_t);
 
 /* USER CODE END Prototypes */
 

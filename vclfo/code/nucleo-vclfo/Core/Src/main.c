@@ -29,7 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "math.h"
 #include "stdlib.h"
-#include "vclfo.h"
+#include "DAC.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +39,17 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+static const int f = 440;
+static const float wave_shape = 0;
+static const int SMPL_SIZE = 256;
+static const int NUM_OCTAVES = 10;
+static const int FS = 48000;
+static const int NUM_WAVES = 4;
+static const int VCO_F_MIN = 40;
+static const int VCO_F_MAX = 20000;
+static const float wavetable[10240] = {
+#include "../../../wavetable_init.dat"
+};
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -50,7 +60,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static int playback_rate;
+static float y2;
+static float k;
+static int tim10_val;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,8 +111,43 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  vclfo_start();
+  DAC_Init();
+
+  // start TIM10
+  HAL_TIM_Base_Start(&htim10);
+  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
+  k = 0;
   /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+	//		/* Check if the SPI is already enabled */
+	//		if ((hspi2.Instance->CR1 & SPI_CR1_SPE) != SPI_CR1_SPE) {
+	//			/* Enable SPI peripheral */
+	//		  __HAL_SPI_ENABLE(&hspi2);
+	//		}
+
+	HAL_Delay(500);
+	//	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 1) {
+	////		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	//
+	//		  playback_rate = SMPL_SIZE * f / FS;
+	//		  int wave_shape_floor = (int) wave_shape;
+	//		  GPIOA->BSRR = GPIO_PIN_4; // gpio on
+	//		  y2 = wt_sample(wave_shape_floor, f, k);
+	//		  GPIOA->BSRR = (uint32_t) GPIO_PIN_4 << 16U;	// gpio off
+	//
+	//		  k = fmodf(k + playback_rate, SMPL_SIZE);
+	//
+	//		  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
+	//	  }
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
 
 /**
