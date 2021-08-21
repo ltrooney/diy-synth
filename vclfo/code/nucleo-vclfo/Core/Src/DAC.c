@@ -19,8 +19,8 @@ void DAC_Init() {
 
 	// initialize dummy DAC buffer
 	for (int i = 0; i < DAC_BUF_SIZE; i++) {
-		mem0_buf[i] = 1;
-		mem1_buf[i] = 1;
+		mem0_buf[i] = 0xAA;
+		mem1_buf[i] = 0xAA;
 	}
 
 	// setup double buffer mode and enable the DMA stream
