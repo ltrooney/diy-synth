@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "dma.h"
 #include "spi.h"
 #include "tim.h"
@@ -30,6 +31,7 @@
 #include "math.h"
 #include "stdlib.h"
 #include "DAC.h"
+#include "ADC_ex.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,7 +113,9 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+  ADC_Init();
   DAC_Init();
 
   // start TIM10
@@ -122,16 +126,17 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint8_t t = 0;
   while (1)
   {
-	HAL_Delay(1000);
-	t = !t;
-	float f = 0;
-	if (t) f = 1;
-	for (int i = 0; i < DAC_QUEUE_NUM_SAMPLES; i++) {
-		DAC_queue_push(f);
-	}
+  	// HAL_Delay(1000);
+
+  	uint16_t adc = ADC_queue_pop();
+
+    // convert adc to range [-1,1]
+  	float adc_f = ((float) adc - 2047) / 2048;
+
+  	DAC_queue_push(adc_f);
+
 	//	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 1) {
 	////		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	//

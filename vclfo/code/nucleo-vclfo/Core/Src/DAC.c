@@ -18,9 +18,9 @@ uint16_t dac_queue_nbytes;
 
 void DAC_Init() {
 
-	// initialize dummy DAC buffer
+	// zero-fill the DAC buffers
 	for (int i = 0; i < DAC_MEM_BUF_SIZE; i++) {
-		mem0_buf[i] = 0xAA;
+		mem0_buf[i] = 0x00;
 		mem1_buf[i] = 0x00;
 	}
 
@@ -28,7 +28,7 @@ void DAC_Init() {
 
 	HAL_DMA_RegisterCallback(&hdma_tim1_ch1_ch2_ch3, HAL_DMA_XFER_CPLT_CB_ID, DAC_xfer_complete_callback);
 
-	// setup double buffer mode and enable the DMA stream
+	// setup double buffer mode and enable the DMA stream for TIM1_CH1/2/3
 	HAL_DMAEx_MultiBufferStart(&hdma_tim1_ch1_ch2_ch3, (uint32_t) mem0_buf, (uint32_t) &hspi2.Instance->DR, (uint32_t) mem1_buf, DAC_MEM_BUF_SIZE);
 
 	// enable SPI
@@ -38,7 +38,7 @@ void DAC_Init() {
 // converts float to a 14-bit DAC sample
 void DAC_queue_push(float sample) {
 	// check if queue has room for another sample
-	if (dac_queue_nbytes + 3 > DAC_MEM_BUF_SIZE) {
+	if (dac_queue_nbytes + BYTES_PER_DAC_SAMPLE > DAC_MEM_BUF_SIZE) {
 		return;
 	}
 
@@ -53,7 +53,7 @@ void DAC_queue_push(float sample) {
 	sample_queue[dac_queue_nbytes+1] = (uint8_t) (sample_int >> 8);
 	sample_queue[dac_queue_nbytes+2] = (uint8_t) sample_int;
 
-	dac_queue_nbytes += 3;
+	dac_queue_nbytes += BYTES_PER_DAC_SAMPLE;
 }
 
 
