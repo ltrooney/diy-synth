@@ -14,4 +14,6 @@ void ADC_Init();
 
 uint16_t ADC_queue_pop();
 
+HAL_StatusTypeDef ADC_Start_DMA_DBM(ADC_HandleTypeDef*, uint32_t*, uint32_t*, uint32_t);
+
 #endif /* INC_ADC_EX_H_ */

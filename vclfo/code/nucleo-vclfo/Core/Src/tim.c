@@ -46,9 +46,9 @@ void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 84-1;
+  htim1.Init.Prescaler = 2-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 19;
+  htim1.Init.Period = 1000-1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -86,18 +86,18 @@ void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.Pulse = 3;
+  sConfigOC.Pulse = 150;
   if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.Pulse = 9;
+  sConfigOC.Pulse = 450;
   if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM2;
-  sConfigOC.Pulse = 19;
+  sConfigOC.Pulse = 950;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
@@ -114,18 +114,6 @@ void MX_TIM1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM1_Init 2 */
-
-  // configure CC channels and enable TIM1
-  HAL_TIM_OC_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_OC_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_OC_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIM_OC_Start(&htim1, TIM_CHANNEL_4);
-
-  // enable DMA for each CC channel
-  __HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC1);
-  __HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC2);
-  __HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC3);
-  __HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC4);
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
@@ -184,7 +172,7 @@ void MX_TIM3_Init(void)
   HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_1);
 
   // enable DMA for each CC channel
-  __HAL_TIM_ENABLE_DMA(&htim3, TIM_DMA_CC1);
+  // __HAL_TIM_ENABLE_DMA(&htim3, TIM_DMA_CC1);
 
   /* USER CODE END TIM3_Init 2 */
 

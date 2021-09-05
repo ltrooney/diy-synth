@@ -11,8 +11,8 @@
 #include "main.h"
 
 #define BYTES_PER_DAC_SAMPLE 3
-#define DAC_QUEUE_NUM_SAMPLES 64
-#define DAC_MEM_BUF_SIZE BYTES_PER_DAC_SAMPLE * DAC_QUEUE_NUM_SAMPLES
+#define DAC_QUEUE_NUM_SAMPLES 48
+#define DAC_MEM_BUFF_SIZE BYTES_PER_DAC_SAMPLE * DAC_QUEUE_NUM_SAMPLES
 
 void DAC_Init();
 
@@ -24,6 +24,8 @@ static inline uint16_t float2DACsample14(float f) {
 	return result << 2;
 }
 
-void DAC_xfer_complete_callback(DMA_HandleTypeDef *);
+void DAC_xfer_M0_cplt(DMA_HandleTypeDef *);
+void DAC_xfer_M1_cplt(DMA_HandleTypeDef *);
+
 
 #endif /* INC_DAC_H_ */

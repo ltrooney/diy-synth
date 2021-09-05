@@ -30,8 +30,9 @@
 /* USER CODE BEGIN Includes */
 #include "math.h"
 #include "stdlib.h"
-#include "DAC.h"
-#include "ADC_ex.h"
+
+#include "../../Drivers/custom/Inc/ADC_STM32F401.h"
+#include "../../Drivers/custom/Inc/DAC_TI8164.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,7 +136,7 @@ int main(void)
     // convert adc to range [-1,1]
   	float adc_f = ((float) adc - 2047) / 2048;
 
-  	DAC_queue_push(adc_f);
+  	// DAC_queue_push(adc_f);
 
 	//	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 1) {
 	////		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -179,7 +180,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLN = 384;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
