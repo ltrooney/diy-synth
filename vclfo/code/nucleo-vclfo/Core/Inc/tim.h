@@ -33,7 +33,6 @@ extern "C" {
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN Private defines */
 extern DMA_HandleTypeDef hdma_tim1_ch1_ch2_ch3;
@@ -42,7 +41,6 @@ extern DMA_HandleTypeDef hdma_tim3_ch1_trig;
 
 void MX_TIM1_Init(void);
 void MX_TIM3_Init(void);
-void MX_TIM10_Init(void);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 

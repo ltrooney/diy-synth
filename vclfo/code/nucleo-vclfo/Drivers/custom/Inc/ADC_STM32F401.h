@@ -10,7 +10,7 @@
 
 #include "main.h"
 
-void ADC_Init();
+void ADC_Init(TIM_HandleTypeDef*, ADC_HandleTypeDef*);
 
 uint16_t ADC_queue_pop();
 

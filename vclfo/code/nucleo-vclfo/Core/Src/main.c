@@ -28,11 +28,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "math.h"
-#include "stdlib.h"
-
 #include "../../Drivers/custom/Inc/ADC_STM32F401.h"
 #include "../../Drivers/custom/Inc/DAC_TI8164.h"
+#include "../custom/engine.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,17 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-//static const int f = 440;
-//static const float wave_shape = 0;
-//static const int SMPL_SIZE = 256;
-//static const int NUM_OCTAVES = 10;
-//static const int FS = 48000;
-//static const int NUM_WAVES = 4;
-//static const int VCO_F_MIN = 40;
-//static const int VCO_F_MAX = 20000;
-//static const float wavetable[10240] = {
-//#include "../../../wavetable_init.dat"
-//};
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -63,10 +51,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-//static int playback_rate;
-//static float y2;
-static float k;
-static int tim10_val;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,47 +95,38 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART2_UART_Init();
-  MX_TIM10_Init();
   MX_SPI2_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  ADC_Init();
-  DAC_Init();
-
-  // start TIM10
-  HAL_TIM_Base_Start(&htim10);
-  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
-  k = 0;
+  ADC_Init(&htim3, &hadc1);
+  DAC_Init(&htim1, &hspi2, &hdma_tim1_ch1_ch2_ch3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t need_more_samples = 1;
+
+  // eventually to be replaced with CV
+  const float wave_shape = 0;
+  const int f = 440;
+
   while (1)
   {
-  	// HAL_Delay(1000);
+    if (need_more_samples) {
 
-  	uint16_t adc = ADC_queue_pop();
+    // todo: pull out CV from buffers and input into wt_sample
+    float smpl = wt_sample((int) wave_shape, f);
+    DAC_queue_push(smpl);
 
-    // convert adc to range [-1,1]
-  	float adc_f = ((float) adc - 2047) / 2048;
-
+  	/* debug */
+    //  uint16_t adc = ADC_queue_pop();
+    //  float adc_f = ((float) adc - 2047) / 2048;	// convert adc to range [-1,1]
   	// DAC_queue_push(adc_f);
-
-	//	  if (__HAL_TIM_GET_COUNTER(&htim10) - tim10_val >= 1) {
-	////		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	//
-	//		  playback_rate = SMPL_SIZE * f / FS;
-	//		  int wave_shape_floor = (int) wave_shape;
-	//		  GPIOA->BSRR = GPIO_PIN_4; // gpio on
-	//		  y2 = wt_sample(wave_shape_floor, f, k);
-	//		  GPIOA->BSRR = (uint32_t) GPIO_PIN_4 << 16U;	// gpio off
-	//
-	//		  k = fmodf(k + playback_rate, SMPL_SIZE);
-	//
-	//		  tim10_val = __HAL_TIM_GET_COUNTER(&htim10);
-	//	  }
+    } else {
+      uint16_t adc = ADC_queue_pop();
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
