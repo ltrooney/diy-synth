@@ -102,22 +102,23 @@ int main(void)
   /* USER CODE BEGIN 2 */
   ADC_Init(&htim3, &hadc1);
   DAC_Init(&htim1, &hspi2, &hdma_tim1_ch1_ch2_ch3);
+
+  CV_inputs cv;
+  cv.f = 440;
+  cv.wave_idx = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   uint8_t need_more_samples = 1;
 
-  // eventually to be replaced with CV
-  const float wave_shape = 0;
-  const int f = 440;
-
   while (1)
   {
     if (need_more_samples) {
 
     // todo: pull out CV from buffers and input into wt_sample
-    float smpl = wt_sample((int) wave_shape, f);
+    float smpl = wt_sample(&cv);
     DAC_queue_push(smpl);
 
   	/* debug */
@@ -125,7 +126,15 @@ int main(void)
     //  float adc_f = ((float) adc - 2047) / 2048;	// convert adc to range [-1,1]
   	// DAC_queue_push(adc_f);
     } else {
-      uint16_t adc = ADC_queue_pop();
+      /* TODO: prepare CV inputs for next sequence */ 
+
+      // TODO: pop all samples in the buf
+      uint16_t f_int = ADC_queue_pop();
+
+      // convert samples from int to float
+
+      // interpolate and create a CV bufs of size PLAYBACK_SIZE, store into CV struct?
+      cv.f = ((float) f_int - 2047) / 2048; // convert to range [-1,1]
     }
     /* USER CODE END WHILE */
 

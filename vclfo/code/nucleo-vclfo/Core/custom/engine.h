@@ -19,7 +19,15 @@ static const float wavetable[10240] = {
 #include "../../../wavetable_init.dat"
 };
 
+typedef struct
+{
+	float f;
+	float wave_idx;
+	uint8_t mode; // 0 = vco, 1 = lfo
+	// ...
+} CV_inputs;
+
 float lookup(const int, const int, const int);
-float wt_sample(const int, const float);
+float wt_sample(CV_inputs*);
 
 #endif /* INC_ENGINE_H_ */
